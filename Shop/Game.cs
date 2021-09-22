@@ -129,10 +129,15 @@ namespace Shop
 
         private void Save()
         {
+            StreamWriter writer = new StreamWriter("SaveData.txt");
 
+            _player.Save(writer);
         }
 
-       
+       private bool Load()
+        {
+
+        }
 
         private void DisplayCurrentScene()
         {

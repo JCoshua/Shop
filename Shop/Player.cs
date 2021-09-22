@@ -62,10 +62,18 @@ namespace Shop
 
         public void Save(StreamWriter writer)
         {
-
+            writer.WriteLine(_gold);
+            writer.WriteLine(_inventory);
         }
 
-        
+        public bool Load(StreamReader reader)
+        {
+            if (!int.TryParse(reader.ReadLine(), out _gold))
+                return false;
+            
+                
+                return true;
+        }
 
        
     }

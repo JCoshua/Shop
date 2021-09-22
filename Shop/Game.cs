@@ -60,7 +60,7 @@ namespace Shop
 
         private void End()
         {
-
+            Console.WriteLine("Please come again!");
         }
 
         private void InitializeItems()
@@ -129,14 +129,34 @@ namespace Shop
 
         private void Save()
         {
+            //Creates a new stream writer
             StreamWriter writer = new StreamWriter("SaveData.txt");
 
             _player.Save(writer);
+
+            //Closes after finishing
+            writer.Close();
         }
 
        private bool Load()
         {
+            bool loadSuccessful = true;
 
+            //File doesn't exist
+            if (!File.Exists("SaveData.txt"))
+                loadSuccessful = false;
+
+            //Creates new reader
+            StreamReader reader = new StreamReader("SaveData.txt");
+            
+            //Checks if the Player Loads
+            if (!_player.Load(reader))
+                loadSuccessful = false;
+
+            
+
+            reader.Close();
+            return loadSuccessful;
         }
 
         private void DisplayCurrentScene()
@@ -166,7 +186,7 @@ namespace Shop
             }
             else if (input == 1)
             {
-                if (_gameOver)
+                if (Load())
                 {
                     Console.WriteLine("Loading Successful");
                     Console.ReadKey(true);
@@ -212,30 +232,24 @@ namespace Shop
             {
                 case 0:
                     if(_shop.Sell(_player, 0))
-                    {
-                        _player.Buy(_sword);
-                    }
+                    _player.Buy(_sword);
                     break;
                 case 1:
                     if (_shop.Sell(_player, 1))
-                    {
-                        _player.Buy(_shield);
-                    }
+                    _player.Buy(_shield);
                     break;
                 case 2:
                     if (_shop.Sell(_player, 2))
-                    {
-                        _player.Buy(_arrow);
-                    }
+                    _player.Buy(_arrow);
                     break;
                 case 3:
                     if (_shop.Sell(_player, 3))
-                    {
-                        _player.Buy(_jewel);
-                    }
+                    _player.Buy(_jewel);
                     break;
                 case 4:
                     Save();
+                    Console.WriteLine("Saved.");
+                    Console.ReadKey(true);
                     break;
                 case 5:
                     _gameOver = true;

@@ -63,16 +63,36 @@ namespace Shop
         public void Save(StreamWriter writer)
         {
             writer.WriteLine(_gold);
-            writer.WriteLine(_inventory);
+
+            writer.WriteLine(_inventory.Length);
+
+            for (int i = 0; i < _inventory.Length; i++)
+            {
+                writer.WriteLine(_inventory[i].Name);
+                
+            }
+
+
         }
 
         public bool Load(StreamReader reader)
         {
+            //Checks if Gold is an int
             if (!int.TryParse(reader.ReadLine(), out _gold))
                 return false;
-            
-                
-                return true;
+
+            if (!int.TryParse(reader.ReadLine(), out int invLength))
+                return false;
+
+            _inventory = new Item[invLength];
+
+            //Loads each item into your inventory
+            for (int i = 0; i < _inventory.Length; i++)
+            {
+                _inventory[i].Name = reader.ReadLine();
+            }
+
+            return true;
         }
 
        

@@ -10,28 +10,53 @@ namespace Shop
         private int _gold;
         private Item[] _inventory;
        
-        public int Gold()
+
+        public Player()
         {
-            return _gold;
+            _gold = 100;
+            _inventory = new Item[0];
         }
 
-        public Item[] Invetory()
+        public int Gold
         {
-            return _inventory;
+            get { return _gold; }
         }
-        public Player(int gold)
+
+        public Player(int tempInt)
         {
 
         }
 
         public void Buy(Item item)
         {
+            _gold -= item.Cost;
 
+            Console.Clear();
+            Console.WriteLine("You bought a " + item.Name + "!");
+            Console.ReadKey(true);
+
+            Item[] TempArray = new Item[_inventory.Length + 1];
+
+            for (int i = 0; i < _inventory.Length; i++)
+            {
+                TempArray[i] = _inventory[i];
+            }
+
+            TempArray[TempArray.Length - 1] = item;
+
+            _inventory = TempArray;
         }
 
         public string[] GetItemNames()
         {
+            string[] itemNames = new string[_inventory.Length];
 
+            for (int i = 0; i < _inventory.Length; i++)
+            {
+                itemNames[i] = _inventory[i].Name;
+            }
+
+            return itemNames;
         }
         
 
@@ -40,10 +65,7 @@ namespace Shop
 
         }
 
-        public bool Load(StreamReader reader)
-        {
-
-        }
+        
 
        
     }

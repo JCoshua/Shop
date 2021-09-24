@@ -31,6 +31,7 @@ namespace Shop
         private Item _jewel;
 
         public Item[] _shopInventory;
+
         public void Run()
         {
             Start();
@@ -43,6 +44,9 @@ namespace Shop
             End();
         }
 
+        /// <summary>
+        /// Used to initialize Starting Values
+        /// </summary>
         private void Start()
         {
             _gameOver = false;
@@ -52,17 +56,26 @@ namespace Shop
             _currentScene = Scene.STARTMENU;
         }
 
+        /// <summary>
+        /// Updates the game every game loop
+        /// </summary>
         private void Update()
         {
             DisplayCurrentScene();
             Console.Clear();
         }
 
+        /// <summary>
+        /// A simple ending message
+        /// </summary>
         private void End()
         {
             Console.WriteLine("Please come again!");
         }
 
+        /// <summary>
+        /// Creates the items in the game and puts them into an array
+        /// </summary>
         private void InitializeItems()
         {
             //Initializes the Items
@@ -127,6 +140,9 @@ namespace Shop
             return inputReceived;
         }
 
+        /// <summary>
+        /// Creates a save
+        /// </summary>
         private void Save()
         {
             //Creates a new stream writer
@@ -138,6 +154,10 @@ namespace Shop
             writer.Close();
         }
 
+        /// <summary>
+        /// Loads a Save
+        /// </summary>
+        /// <returns>If the save was succsessful</returns>
        private bool Load()
         {
             bool loadSuccessful = true;
@@ -154,11 +174,14 @@ namespace Shop
                 loadSuccessful = false;
 
             
-
+            //Closes reader and returns
             reader.Close();
             return loadSuccessful;
         }
 
+        /// <summary>
+        /// Checks what scene should be displayed
+        /// </summary>
         private void DisplayCurrentScene()
         {
             switch (_currentScene)
@@ -176,25 +199,38 @@ namespace Shop
             }
         }
 
+        /// <summary>
+        /// The starting screen where the player can start a new game or load an existing game
+        /// </summary>
         private void DisplayOpeningMenu()
         {
             int input = GetInput("Welcome to the RPG Shop Simulator! What would you like to do?", "Start Shopping", "Load Inventory");
             
+            //If player starts shopping
             if (input == 0)
             {
+                //bring to Shop
                 _currentScene = Scene.SHOP;
             }
+
+            //If player loads inventory
             else if (input == 1)
             {
+                //checks if load unsuccessful
                 if (Load())
                 {
+                    //Tell Player load is successful
                     Console.WriteLine("Loading Successful");
                     Console.ReadKey(true);
                     Console.Clear();
+                    
+                    //Bring them to shop
                     _currentScene = Scene.SHOP;
                 }
+                //IF unsuccessful
                 else
                 {
+                    //Tell player an error is occured
                     Console.WriteLine("Woops, something messed up");
                     Console.ReadKey(true);
                     Console.Clear();
@@ -202,59 +238,79 @@ namespace Shop
             }
         }
 
+        /// <summary>
+        /// Gets the items that will be shown in the menu, and adds saving and exiting
+        /// </summary>
+        /// <returns>The options that will be displayed in the shop menu</returns>
         private string[] GetShopMenuOptions()
         {
+            //Creates a new string array two longer that the shopInventory array
             string[] itemNames = new string[_shopInventory.Length + 2];
 
+            //Copies the names of the items
             for (int i = 0; i < _shopInventory.Length; i++)
             {
                 itemNames[i] = _shopInventory[i].Name + ": " + _shopInventory[i].Cost + " Gold";
             }
 
+            //Adds Save and Exit and returns the finished array
             itemNames[_shopInventory.Length] = "Save";
             itemNames[_shopInventory.Length + 1] = "Exit";
             return itemNames;
         }
 
+        /// <summary>
+        /// The Shop Menu
+        /// </summary>
         private void DisplayShopMenu()
         {
+            //Displays the players gold
             Console.WriteLine("Your Gold: " + _player.Gold);
-            Console.WriteLine("Your Inventory:");
 
+            //Displays the player's Inventory
+            Console.WriteLine("Your Inventory:");
+            
+            //Displays each item in the player's inventory
             for (int i = 0; i < _player.GetItemNames().Length; i++)
             {
                 Console.WriteLine(_player.GetItemNames()[i]);
             }
             
+            //Displays the options
             int input = GetInput("\nWhat would you like to puchase?", GetShopMenuOptions());
 
             switch (input)
             {
+                //Buying a sword
                 case 0:
                     if(_shop.Sell(_player, 0))
                     _player.Buy(_sword);
                     break;
+                //Buying a shield
                 case 1:
                     if (_shop.Sell(_player, 1))
                     _player.Buy(_shield);
                     break;
+                //Buying an Arrow
                 case 2:
                     if (_shop.Sell(_player, 2))
                     _player.Buy(_arrow);
                     break;
+                //Buying a Jewel
                 case 3:
                     if (_shop.Sell(_player, 3))
                     _player.Buy(_jewel);
                     break;
+                //Saving
                 case 4:
                     Save();
                     Console.WriteLine("Saved.");
                     Console.ReadKey(true);
                     break;
+                //Exit
                 case 5:
                     _gameOver = true;
                     break;
-
             }
         }
     }
